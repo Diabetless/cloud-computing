@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require("express");
 const cors = require('cors')
 const app = express();
@@ -18,6 +19,13 @@ app.use('/', (req,res,next)=>{
   res.status(404).json({
     status: 'NOT FOUND!!!',
     message: 'Resource Not Found!'
+  })
+})
+
+app.use('/test-cicd', (req, res, next) => {
+  res.status(200).json({
+    status: 'WELCOME CICD',
+    env: `${process.env.PORT} ${process.env.JWT_KEY}`
   })
 })
 
