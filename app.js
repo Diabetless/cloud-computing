@@ -24,7 +24,7 @@ app.use('/', (req,res,next)=>{
 
 app.use('/test-cicd', (req, res, next) => {
   res.status(200).json({
-    status: 'WELCOME CICD',
+    status: 'WELCOME CICD!!',
     env: `${process.env.PORT} ${process.env.JWT_KEY}`
   })
 })
