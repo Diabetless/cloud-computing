@@ -15,17 +15,17 @@ app.use(cors({
 
 app.use('/users', userRoutes);
 
-app.use('/', (req,res,next)=>{
-  res.status(404).json({
-    status: 'NOT FOUND!!!',
-    message: 'Resource Not Found!'
-  })
-})
-
 app.use('/test-cicd', (req, res, next) => {
   res.status(200).json({
     status: 'WELCOME CICD!!',
     env: `${process.env.PORT} ${process.env.JWT_KEY}`
+  })
+})
+
+app.use('/', (req,res,next)=>{
+  res.status(404).json({
+    status: 'NOT FOUND!!!',
+    message: 'Resource Not Found!'
   })
 })
 
