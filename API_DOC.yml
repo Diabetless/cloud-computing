@@ -1,0 +1,118 @@
+openapi: 3.0.2
+info:
+  title: Diabetless API
+  version: 1.0.0
+servers:
+  - url: https://backend-sggimrersq-et.a.run.app
+    description: Development server
+
+paths:
+  /users/register:
+    post:
+      summary: Register a new user
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                fullName:
+                  type: string
+                  description: The full name of the user.
+                email:
+                  type: string
+                  format: email
+                  description: The email of the user.
+                username:
+                  type: string
+                  description: The username of the user.
+                password:
+                  type: string
+                  format: password
+                  description: The password for the user account.
+              required:
+                - fullName
+                - email
+                - username
+                - password
+      responses:
+        '201':
+          description: User registered successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    description: Status of the operation.
+                  message:
+                    type: string
+                    description: Message indicating successful registration.
+                  token:
+                    type: string
+                    description: JWT token for the user session.
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    description: Status of the operation.
+                  message:
+                    type: string
+                    description: Error message indicating the email has already been registered.
+
+  /users/login:
+    post:
+      summary: User login
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  format: email
+                  description: The email of the user.
+                password:
+                  type: string
+                  format: password
+                  description: The password for the user account.
+              required:
+                - email
+                - password
+      responses:
+        '200':
+          description: User logged in successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    description: Status of the operation.
+                  message:
+                    type: string
+                    description: Message indicating successful login.
+                  token:
+                    type: string
+                    description: JWT token for the user session.
+        '400':
+          description: Wrong email or password
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    description: Status of the operation.
+                  message:
+                    type: string
+                    description: Error message indicating invalid email or password.
