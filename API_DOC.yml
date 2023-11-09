@@ -177,7 +177,255 @@ paths:
                     description: Status of the operation.
                   message:
                     type: string
-                    description: Error message indicating user doesn't exist".                
+                    description: Error message indicating user doesn't exist". 
+
+  /articles:
+    get:
+      summary: All Articles
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Successfully Get All Title and Post Date Articles
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: Success
+                  message:
+                    type: string
+                    example: Successfully fetch all article
+                  article:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        _id:
+                          type: string
+                          example: fc11b200-4e9d-4150-b450-ac784533f2b7
+                        postDate:
+                          type: string
+                          example: Thu Nov 09 2023
+                        title:
+                          type: string
+                          example: TITLE
+        '403':
+          description: "Token must be included in bearer at req.headers"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    description: Status of the operation.
+                  message:
+                    type: string
+                    description: Error message indicating user must login first.
+    post:
+      summary: Create a New Article
+      security:
+        - bearerAuth: []
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                  description: The title of article.
+                content:
+                  type: string
+                  description: The content of article.
+                image:
+                  type: string
+                  format: binary
+                  description: The image of article.
+              required:
+                - title
+                - content
+                - image
+      responses:
+        '201':
+          description: Article successfully created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    description: Status of the operation.
+                  message:
+                    type: string
+                    description: Message indicating the article successfully created.
+        '400':
+          description: The field required empty.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    description: Status of the operation.
+                  message:
+                    type: string
+                    description: Field required empty.
+        '403':
+          description: "Token must be included in bearer at req.headers"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    description: Status of the operation.
+                  message:
+                    type: string
+                    description: Error message indicating user must login first.
+  
+  /articles/{id}:
+    get:
+      summary: Get spesific article
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successfully get the article
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: Success
+                  message:
+                    type: string
+                    example: Successfully fetch article
+                  article:
+                    type: object
+                    properties:
+                      imageUrl:
+                        type: string
+                        example: https://storage.googleapis.com/example-project/example.png
+                      postDate:
+                        type: string
+                        example: Thu Nov 09 2023
+                      _id:
+                        type: string
+                        example: fc11b200-4e9d-4150-b450-ac784533f2b7
+                      title:
+                        type: string
+                        example: TITLE
+                      content:
+                        type: string
+                        example: Content
+        '403':
+          description: "Token must be included in bearer at req.headers"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    description: Status of the operation.
+                  message:
+                    type: string
+                    description: Error message indicating user must login first.
+        '404':
+          description: Article not found.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    description: Status of the operation.
+                  message:
+                    type: string
+                    description: Indication the article not found.
+    put:
+      summary: Update the exsiting article.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                  description: The title of article.
+                content:
+                  type: string
+                  description: The content of article.
+                image:
+                  type: string
+                  format: binary
+                  description: The image of article.
+      responses:
+        '200':
+          description: Article successfully Updated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    description: Status of the operation.
+                  message:
+                    type: string
+                    description: Message indicating the article successfully Updated.
+        '403':
+          description: "Token must be included in bearer at req.headers"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    description: Status of the operation.
+                  message:
+                    type: string
+                    description: Error message indicating user must login first.
+        '404':
+          description: Article not found.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    description: Status of the operation.
+                  message:
+                    type: string
+                    description: Indication the article not found.
+
 components:
   securitySchemes:
     bearerAuth:

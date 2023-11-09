@@ -65,7 +65,7 @@ const putArticleHandler = async (req, res, nex) => {
 
     if(!articleData){
       const error = new Error("Article not found");
-      error.status = 400;
+      error.status = 404;
       throw error;
   }
 
@@ -150,7 +150,7 @@ const getArticleByIdHandler = async (req, res, next) => {
 
     if(!data){
       const error = new Error("Article not found");
-      error.status = 400;
+      error.status = 404;
       throw error;
   }
 
