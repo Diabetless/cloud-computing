@@ -5,8 +5,6 @@ info:
 servers:
   - url: https://backend-sggimrersq-et.a.run.app
     description: Development server
-security:
-  - bearerAuth: []
 paths:
   /users/register:
     post:
@@ -151,6 +149,32 @@ paths:
                       profilePicture:
                         type: string
                         example: http://example.com/profile.jpg
+        '403':
+          description: "Token must be included in bearer at req.headers"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    description: Status of the operation.
+                  message:
+                    type: string
+                    description: Error message indicating user must login first.
+        '400':
+          description: "User doesn't exist"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    description: Status of the operation.
+                  message:
+                    type: string
+                    description: Error message indicating user doesn't exist".                
 components:
   securitySchemes:
     bearerAuth:
