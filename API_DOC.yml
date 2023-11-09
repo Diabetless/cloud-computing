@@ -149,6 +149,9 @@ paths:
                       profilePicture:
                         type: string
                         example: http://example.com/profile.jpg
+                      birthday:
+                        type: string
+                        example: 07/11/2000
         '403':
           description: "Token must be included in bearer at req.headers"
           content:

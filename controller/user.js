@@ -121,7 +121,8 @@ const getUserInfo = async(req,res,next)=>{
           fullName : loggedUser.fullName,
           email: loggedUser.email,
           username: loggedUser.username,
-          profilePicture: loggedUser.profilePicture || ""
+          profilePicture: loggedUser.profilePicture || "",
+          birthday: loggedUser.birthday || ""
         }
       })
     } else {
