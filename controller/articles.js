@@ -59,8 +59,9 @@ const postArticleHandler = async (req, res, next) => {
 const putArticleHandler = async (req, res, nex) => {
   try{
     const id = req.params.id;
-    const artilceRef = db.collection('articles').doc(id);
-    const articleData = await artilceRef.get().data();
+    const articleRef = db.collection('articles').doc(`${id}`);
+    const doc = await articleRef.get();
+    const articleData = doc.data();
 
     const { title, content } = req.body;
     const file = req.file;
@@ -79,7 +80,7 @@ const putArticleHandler = async (req, res, nex) => {
         await blob.makePublic();
         const imageUrl = `https://storage.googleapis.com/${bucket.name}/${blob.name}`;
 
-        await artilceRef.set({
+        await articleRef.set({
           ...articleData,
           title,
           content,
@@ -89,7 +90,7 @@ const putArticleHandler = async (req, res, nex) => {
 
       blobStream.end(file.buffer);
     }else{
-      await artilceRef.set({
+      await articleRef.set({
         ...articleData,
         title,
         content,
