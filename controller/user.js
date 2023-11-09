@@ -99,7 +99,8 @@ const loginHandler = async(req,res,next)=>{
     res.status(200).json({
       status: "Success",
       message: "Login Successfull",
-      token
+      token,
+      userId: userData.id
     });
   } catch (error) {
     res.status(error.status || 500).json({

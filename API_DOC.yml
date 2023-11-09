@@ -5,7 +5,8 @@ info:
 servers:
   - url: https://backend-sggimrersq-et.a.run.app
     description: Development server
-
+security:
+  - bearerAuth: []
 paths:
   /users/register:
     post:
@@ -116,3 +117,46 @@ paths:
                   message:
                     type: string
                     description: Error message indicating invalid email or password.
+  /users:
+    get:
+      summary: User Account Data
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Successfully Get User Account Data
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: Success
+                  message:
+                    type: string
+                    example: Successfully fetch user data
+                  user:
+                    type: object
+                    properties:
+                      fullName:
+                        type: string
+                        example: John Doe
+                      email:
+                        type: string
+                        example: johndoe@example.com
+                      username:
+                        type: string
+                        example: johndoe
+                      profilePicture:
+                        type: string
+                        example: http://example.com/profile.jpg
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+                        
+          
+
