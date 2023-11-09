@@ -87,8 +87,8 @@ const loginHandler = async(req,res,next)=>{
     }
 
     const tokenPayload = {
-      userId: currentUser.docs[0].id,
-    }
+      userId: currentUser.id,
+    };
 
     const token = jwt.sign(tokenPayload, jwtKey, {
       algorithm: 'HS256'
@@ -97,7 +97,7 @@ const loginHandler = async(req,res,next)=>{
     res.status(200).json({
       status: "Success",
       message: "Login Successfull",
-      token
+      token,
     });
   } catch (error) {
     res.status(error.status || 500).json({
