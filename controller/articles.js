@@ -63,6 +63,12 @@ const putArticleHandler = async (req, res, nex) => {
     const doc = await articleRef.get();
     const articleData = doc.data();
 
+    if(!articleData){
+      const error = new Error("Article not found");
+      error.status = 400;
+      throw error;
+  }
+
     const { title, content } = req.body;
     const file = req.file;
 
@@ -123,7 +129,8 @@ const getAllArtilcesHandler = async (req, res, next) => {
 
     res.status(200).json({
       status: "Success",
-      data
+      message: "Successfully fetch all article",
+      article: data
     })
     
   }catch(error){
@@ -141,9 +148,16 @@ const getArticleByIdHandler = async (req, res, next) => {
     const doc = await articlesRef.get();
     const data = doc.data();
 
+    if(!data){
+      const error = new Error("Article not found");
+      error.status = 400;
+      throw error;
+  }
+
     res.status(200).json({
       status: "Success",
-      data
+      message: "Successfully fetch article",
+      article: data
     })
     
   }catch(error){
