@@ -111,25 +111,24 @@ const getUserInfo = async(req,res,next)=>{
   try {
     const token = getToken(req.headers);
     const decoded = jwt.verify(token, jwtKey);
-    const loggedUserRef = await db.collection('users').doc(decoded.userId).get()
-    const loggedUser = await loggedUserRef.data();
+    const loggedUserRef = await db.collection('users').doc(decoded.userId).get();
     if (!loggedUserRef.exists) {
       const error = new Error("User doesn't exist!");
       error.status = 400;
       throw error;
-    } else {
-      res.status(200).json({
-        status: "Success",
-        message: "Successfully fecth user data",
-        user:{
-          fullName : loggedUser.fullName,
-          email: loggedUser.email,
-          username: loggedUser.username,
-          profilePicture: loggedUser.profilePicture || "",
-          birthday: loggedUser.birthday || ""
-        }
-      })
-    }
+    } 
+    const loggedUser = await loggedUserRef.data();
+    res.status(200).json({
+      status: "Success",
+      message: "Successfully fecth user data",
+      user:{
+        fullName : loggedUser.fullName,
+        email: loggedUser.email,
+        username: loggedUser.username,
+        profilePicture: loggedUser.profilePicture || "",
+        birthday: loggedUser.birthday || ""
+      }
+    })
   } catch (error) {
     res.status(error.status || 500).json({
       status: "Error",
