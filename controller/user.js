@@ -6,6 +6,18 @@ const jwt = require('jsonwebtoken');
 
 const jwtKey = process.env.JWT_KEY;
 
+const getToken = (headers) => {
+  const authorizationHeader = headers.authorization;
+  if (authorizationHeader && authorizationHeader.startsWith('Bearer ')) {
+      return (authorizationHeader.substring(7)); // Remove 'Bearer ' from the header
+  }
+  else {
+      const error = new Error("You need to login");
+      error.status = 401;
+      throw error;
+  }
+}
+
 const registerHandler = async(req,res,next)=>{
   try {
     const usersref = db.collection('users');
@@ -97,6 +109,36 @@ const loginHandler = async(req,res,next)=>{
   }
 }
 
+const getUserInfo = async(req,res,next)=>{
+  try {
+    const token = getToken(req.headers);
+    const decoded = jwt.verify(token, jwtKey);
+    const loggedUserRef = db.collection('users').doc(decoded.userId)
+    const loggedUser = loggedUserRef.data();
+    if (!loggedUser.exists) {
+      const error = new Error("User doesn't exist!");
+      error.status = 400;
+      throw error;
+    } else {
+      res.status(200).json({
+        status: "Success",
+        message: "Successfully fecth user data",
+        user:{
+          fullName : loggedUser.fullName,
+          email: loggedUser.email,
+          username: loggedUser.username,
+          profilePicture: loggedUser.profilePicture || null
+        }
+      })
+    }
+  } catch (error) {
+    res.status(error.status || 500).json({
+      status: "Error",
+      message: error.message
+    })
+  }
+}
+
 module.exports = {
-  registerHandler, loginHandler
+  registerHandler, loginHandler, getUserInfo
 }
