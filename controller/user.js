@@ -46,7 +46,6 @@ const registerHandler = async(req,res,next)=>{
 
     const tokenPayload = {
       userId: newUserRef.id,
-      username: newUserRef.username
     }
 
     const token = jwt.sign(tokenPayload, jwtKey, {
@@ -88,8 +87,7 @@ const loginHandler = async(req,res,next)=>{
     }
 
     const tokenPayload = {
-      userId: userData.id,
-      username: userData.username
+      userId: currentUser.docs[0].id,
     }
 
     const token = jwt.sign(tokenPayload, jwtKey, {
@@ -113,13 +111,9 @@ const getUserInfo = async(req,res,next)=>{
   try {
     const token = getToken(req.headers);
     const decoded = jwt.verify(token, jwtKey);
-    const loggedUserRef = db.collection('users').doc(decoded.userId)
-    const loggedUser = loggedUserRef.data();
+    const loggedUserRef = await db.collection('users').doc(decoded.userId).get()
+    const loggedUser = await loggedUserRef.data();
     if (!loggedUser.exists) {
-      const error = new Error("User doesn't exist!");
-      error.status = 400;
-      throw error;
-    } else {
       res.status(200).json({
         status: "Success",
         message: "Successfully fecth user data",
@@ -127,9 +121,13 @@ const getUserInfo = async(req,res,next)=>{
           fullName : loggedUser.fullName,
           email: loggedUser.email,
           username: loggedUser.username,
-          profilePicture: loggedUser.profilePicture || null
+          profilePicture: loggedUser.profilePicture || ""
         }
       })
+    } else {
+      const error = new Error("User doesn't exist!");
+      error.status = 400;
+      throw error;
     }
   } catch (error) {
     res.status(error.status || 500).json({
