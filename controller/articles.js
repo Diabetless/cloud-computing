@@ -56,6 +56,59 @@ const postArticleHandler = async (req, res, next) => {
   }
 }
 
+const putArticleHandler = async (req, res, nex) => {
+  try{
+    const id = req.params.id;
+    const artilceRef = db.collection('articles').doc(id);
+    const articleData = await artilceRef.get().data();
+
+    const { title, content } = req.body;
+    const file = req.file;
+
+    if(file){
+      const blob = bucket.file(`articles-image/${new Date().getTime()}-${file.originalname}`);
+      const blobStream = blob.createWriteStream();
+
+      blobStream.on('error', (err) => {
+        const error = new Error("Image Failed to Upload");
+        error.status = 500;
+        throw error;
+      });
+
+      blobStream.on('finish', async () => {
+        await blob.makePublic();
+        const imageUrl = `https://storage.googleapis.com/${bucket.name}/${blob.name}`;
+
+        await artilceRef.set({
+          ...articleData,
+          title,
+          content,
+          imageUrl,
+        })
+      });
+
+      blobStream.end(file.buffer);
+    }else{
+      await artilceRef.set({
+        ...articleData,
+        title,
+        content,
+      })
+    }
+
+    res.status(200).json({
+      status: "Success",
+      message: "Article Updated Successfully"
+    })
+
+  }catch(error){
+    res.status(error.status || 500).json({
+      status: "Error",
+      message: error.message
+    })
+  }
+}
+
 const getAllArtilcesHandler = async (req, res, next) => {
   try{
     const articlesRef = db.collection('articles');
@@ -100,4 +153,4 @@ const getArticleByIdHandler = async (req, res, next) => {
   }
 }
 
-module.exports = { postArticleHandler, getAllArtilcesHandler, getArticleByIdHandler }
+module.exports = { postArticleHandler, getAllArtilcesHandler, getArticleByIdHandler, putArticleHandler }
