@@ -18,7 +18,7 @@ const postArticleHandler = async (req, res, next) => {
       throw error;
     }
 
-    const blob = bucket.file(`articles-image/${file.originalname}`);
+    const blob = bucket.file(`articles-image/${new Date().getTime()}-${file.originalname}`);
     const blobStream = blob.createWriteStream();
 
     blobStream.on('error', (err) => {
