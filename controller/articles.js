@@ -91,7 +91,7 @@ const putArticleHandler = async (req, res, nex) => {
           title,
           content,
           imageUrl,
-        })
+        }, { ignoreUndefinedProperties: true})
       });
 
       blobStream.end(file.buffer);
@@ -100,7 +100,7 @@ const putArticleHandler = async (req, res, nex) => {
         ...articleData,
         title,
         content,
-      })
+      }, { ignoreUndefinedProperties: true})
     }
 
     res.status(200).json({
