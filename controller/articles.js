@@ -88,19 +88,19 @@ const putArticleHandler = async (req, res, nex) => {
 
         await articleRef.set({
           ...articleData,
-          title,
-          content,
+          ...(title !== undefined ? { title } : {}),
+          ...(content !== undefined ? { content } : {}),
           imageUrl,
-        }, { ignoreUndefinedProperties: true})
+        })
       });
 
       blobStream.end(file.buffer);
     }else{
       await articleRef.set({
         ...articleData,
-        title,
-        content,
-      }, { ignoreUndefinedProperties: true})
+        ...(title !== undefined ? { title } : {}),
+        ...(content !== undefined ? { content } : {}),
+      })
     }
 
     res.status(200).json({
