@@ -131,3 +131,4 @@ dist
 
 #Service Account Credentials
 storage-credentials.json
+firebase-credentials.json
