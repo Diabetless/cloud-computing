@@ -125,6 +125,7 @@ const getAllArtilcesHandler = async (req, res, next) => {
       _id: doc.data()._id,
       postDate: doc.data().postDate,
       title: doc.data().title,
+      imageUrl: doc.data().imageUrl,
     }))
 
     res.status(200).json({
