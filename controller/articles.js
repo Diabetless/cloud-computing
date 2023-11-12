@@ -86,6 +86,11 @@ const putArticleHandler = async (req, res, nex) => {
         await blob.makePublic();
         const imageUrl = `https://storage.googleapis.com/${bucket.name}/${blob.name}`;
 
+        const splitExistingUrl = articleData.imageUrl.split('/')
+        const fileName = splitExistingUrl[splitExistingUrl.length - 1]
+        const pathToFile = `articles-image/${fileName}`
+        await bucket.file(pathToFile).delete();
+
         await articleRef.set({
           ...articleData,
           ...(title !== undefined ? { title } : {}),
