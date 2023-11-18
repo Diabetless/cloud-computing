@@ -6,8 +6,8 @@ const app = express();
 const userRoutes = require('./routes/user')
 const articlesRoutes = require('./routes/articles')
 
-app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+app.use(express.json());
 
 app.use(cors({
   origin: "*",
