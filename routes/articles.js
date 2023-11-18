@@ -5,7 +5,6 @@ const multer = require('multer');
 const storage = multer.memoryStorage();
 const upload = multer({storage: storage});
 
-
 const { postArticleHandler, getAllArtilcesHandler, getArticleByIdHandler, putArticleHandler } = require('../controller/articles');
 
 router.post('/', upload.single('image'), postArticleHandler);

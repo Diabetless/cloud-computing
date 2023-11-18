@@ -52,7 +52,7 @@ paths:
                     type: string
                     description: JWT token for the user session.
         '400':
-          description: Bad request
+          description: Bad request, email has been registered
           content:
             application/json:
               schema:
@@ -178,7 +178,57 @@ paths:
                   message:
                     type: string
                     description: Error message indicating user doesn't exist". 
-
+  /users/edit-profile:
+    post:
+      summary: User Account Data
+      security:
+        - bearerAuth: []
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                fullName:
+                  type: string
+                  description: User's fullName.
+                username:
+                  type: string
+                  description: User's username
+                image:
+                  type: string
+                  format: binary
+                  description: User's profile picture.
+                email:
+                  type: string
+                  description: User's email which has not been registered
+      responses:
+        '200':
+          description: Successfully Updated User
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    description: status of the operation.
+                  message:
+                    type: string
+                    description: Message indicating the article successfully created.
+        '400':
+          description: Bad request, email has been registered
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    description: Status of the operation.
+                  message:
+                    type: string
+                    description: Error message indicating the email has already been registered.
   /articles:
     get:
       summary: All Articles

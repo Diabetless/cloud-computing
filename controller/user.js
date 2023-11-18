@@ -1,8 +1,8 @@
-//file ini berisi controller yang terkait dengan user account
 require('dotenv').config();
 const bcrypt = require('bcrypt');
 const db = require('../util/connect_db');
 const jwt = require('jsonwebtoken');
+const bucket = require('../util/connect_storage')
 
 const jwtKey = process.env.JWT_KEY;
 
@@ -87,7 +87,7 @@ const loginHandler = async(req,res,next)=>{
     }
 
     const tokenPayload = {
-      userId: currentUser.id,
+      userId: currentUser.docs[0].id,
     };
 
     const token = jwt.sign(tokenPayload, jwtKey, {
@@ -137,6 +137,62 @@ const getUserInfo = async(req,res,next)=>{
   }
 }
 
+const editUserAccount = async(req,res,next)=>{
+  try {
+    const usersref = db.collection('users');
+    const token = getToken(req.headers);
+    const decoded = jwt.verify(token, jwtKey);
+    const loggedUserRef = await usersref.doc(decoded.userId);
+    const { fullName, email, username, birthday } = req.body;
+    if(email){
+      const registeredEmail = await usersref.where('email', '==', email).get();
+      if(!registeredEmail.empty){
+        const error = new Error("Email has been registered");
+        error.status = 400;
+        throw error;
+      }
+    }
+    if(req.file){
+      try {
+        const file = req.file;
+        const fileExtension = file.originalname.split('.').pop();
+        const blob = bucket.file(`user_profile/${decoded.userId}.${fileExtension}`);
+        const blobStream = blob.createWriteStream();
+        blobStream.on('error', (err) => {
+          const error = new Error("Image Failed to Upload");
+          error.status = 500;
+          throw error;
+        });
+        blobStream.on('finish', async () => {
+          await blob.makePublic();
+          const imageUrl = `https://storage.googleapis.com/${bucket.name}/${blob.name}`;
+  
+          await loggedUserRef.update({
+            fullName, username, email, birthday,
+            profilePicture: imageUrl
+          })
+        });
+        blobStream.end(file.buffer);
+      } catch (error) {
+        console.log(error);
+      }
+    }else{
+      await loggedUserRef.update({
+        fullName, username, email, birthday,
+      })
+    }
+    res.status(200).json({
+      status: "Success",
+      message: "Succesfully update user profile"
+    })
+  } catch (error) {
+    res.status(error.status || 500).json({
+      status: "Error",
+      message: error.message
+    })
+  }
+}
+
 module.exports = {
-  registerHandler, loginHandler, getUserInfo
+  registerHandler, loginHandler, getUserInfo, editUserAccount
 }
