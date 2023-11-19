@@ -9,17 +9,15 @@ const postMealsHandler = async (req, res, next) => {
     const mealsRef = db.collection('meals');
 
     const uniqueId = uuidv4();
-    let { title, content, glycemicIndex, glycemicLoad, calorie } = req.body;
+    let { title, content, calorie } = req.body;
     const file = req.file;
 
-    if( !title || !content || !glycemicIndex || !glycemicLoad || !calorie || !file ){
-      const error = new Error("The Title, Content, Glycemic Index, Glycemic Load, Calorie, or Image required");
+    if( !title || !content || !calorie || !file ){
+      const error = new Error("The Title, Content, Calorie, or Image required");
       error.status = 400;
       throw error;
     }
 
-    glycemicIndex = parseFloat(glycemicIndex);
-    glycemicLoad = parseFloat(glycemicLoad);
     calorie = parseFloat(calorie);
 
     const blob = bucket.file(`meals-image/${new Date().getTime()}-${file.originalname}`);
@@ -41,8 +39,6 @@ const postMealsHandler = async (req, res, next) => {
         _id: uniqueId,
         title,
         content,
-        glycemicIndex,
-        glycemicLoad,
         calorie,
         postDate,
         imageUrl,
@@ -76,11 +72,9 @@ const putMealsHandler = async (req, res, nex) => {
       throw error;
   }
 
-    let { title, content, glycemicIndex, glycemicLoad, calorie } = req.body;
+    let { title, content, calorie } = req.body;
     const file = req.file;
 
-    if(glycemicIndex) glycemicIndex = parseFloat(glycemicIndex);
-    if(glycemicLoad) glycemicLoad = parseFloat(glycemicLoad);
     if(calorie) calorie = parseFloat(calorie);
 
     if(file){
@@ -106,8 +100,6 @@ const putMealsHandler = async (req, res, nex) => {
           ...mealData,
           ...(title !== undefined ? { title } : {}),
           ...(content !== undefined ? { content } : {}),
-          ...(glycemicIndex !== undefined ? { glycemicIndex } : {}),
-          ...(glycemicLoad !== undefined ? { glycemicLoad } : {}),
           ...(calorie !== undefined ? { calorie } : {}),
           imageUrl,
         })
@@ -119,8 +111,6 @@ const putMealsHandler = async (req, res, nex) => {
         ...mealData,
         ...(title !== undefined ? { title } : {}),
         ...(content !== undefined ? { content } : {}),
-        ...(glycemicIndex !== undefined ? { glycemicIndex } : {}),
-        ...(glycemicLoad !== undefined ? { glycemicLoad } : {}),
         ...(calorie !== undefined ? { calorie } : {}),
       })
     }
@@ -148,8 +138,6 @@ const getAllMealsHandler = async (req, res, next) => {
       postDate: doc.data().postDate,
       title: doc.data().title,
       imageUrl: doc.data().imageUrl,
-      glycemicIndex: doc.data().glycemicIndex,
-      glycemicLoad: doc.data().glycemicLoad,
       calorie: doc.data().calorie,
     }))
 

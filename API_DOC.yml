@@ -486,7 +486,7 @@ paths:
         - bearerAuth: []
       responses:
         '200':
-          description: Successfully Get All Title,Post Date, Image, Glycemic Index, Glycemic Load, and Calorie Meals
+          description: Successfully Get All Title,Post Date, Image, and Calorie Meals
           content:
             application/json:
               schema:
@@ -512,12 +512,6 @@ paths:
                         title:
                           type: string
                           example: Title
-                        glycemicIndex:
-                          type: number
-                          example: 11
-                        glycemicLoad:
-                          type: number
-                          example: 11
                         calorie:
                           type: number
                           example: 11
@@ -557,12 +551,6 @@ paths:
                   type: string
                   format: binary
                   description: The image of meal.
-                glycemicIndex:
-                  type: string
-                  description: The Glycemic Index of meal.
-                glycemicLoad:
-                  type: string
-                  description: The Glycemic Load of meal.
                 calorie:
                   type: string
                   description: The Calorie of meal.
@@ -570,8 +558,6 @@ paths:
                 - title
                 - content
                 - image
-                - glycemicIndex
-                - glycemicLoad
                 - calorie
       responses:
         '201':
@@ -651,12 +637,6 @@ paths:
                       title:
                         type: string
                         example: Title
-                      glycemicIndex:
-                        type: number
-                        example: 11
-                      glycemicLoad:
-                        type: number
-                        example: 11
                       calorie:
                         type: number
                         example: 11
@@ -718,12 +698,6 @@ paths:
                   type: string
                   format: binary
                   description: The image of meal.
-                glycemicIndex:
-                  type: string
-                  description: The Glycemic Index of meal.
-                glycemicLoad:
-                  type: string
-                  description: The Glycemic Load of meal.
                 calorie:
                   type: string
                   description: The Calorie of meal.
