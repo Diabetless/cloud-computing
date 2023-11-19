@@ -179,7 +179,7 @@ paths:
                     type: string
                     description: Error message indicating user doesn't exist". 
   /users/edit-profile:
-    post:
+    put:
       summary: User Account Data
       security:
         - bearerAuth: []
