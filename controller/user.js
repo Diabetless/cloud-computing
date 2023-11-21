@@ -20,6 +20,8 @@ const getToken = (headers) => {
 
 const registerHandler = async(req,res,next)=>{
   try {
+    const healthRef = db.collection('personal_health');
+
     const usersref = db.collection('users');
 
     //ambil data dari request body
@@ -43,6 +45,10 @@ const registerHandler = async(req,res,next)=>{
       username,
       password: hashedPassword
     })
+
+    await healthRef.add({
+      userId: newUserRef.id,
+    });
 
     const tokenPayload = {
       userId: newUserRef.id,
