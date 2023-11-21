@@ -60,28 +60,26 @@ const uploadBloodSugar = async (req, res, next) => {
     const decoded = jwt.verify(req.token, jwtKey);
 
     let currentUserHealth = await healthRef.where('userId', '==', decoded.userId).get();
-
-    if (!currentUserHealth.empty) {
-      const healthDoc = currentUserHealth.docs[0];
-      const currentHealthData = healthDoc.data();
+    const healthDoc = currentUserHealth.docs[0];
+    const currentHealthData = healthDoc.data();
+    if(!currentHealthData.bloodSugarLevel){
+      await healthRef.doc(healthDoc.id).update({
+        bloodSugarData: [
+          {
+            level: bloodSugarLevel,
+            date
+          }
+        ]
+      });
+    }else{
       const updatedBloodSugarData = [
-        ...currentHealthData.BloodSugarData,
+        ...currentHealthData.bloodSugarData,
         {
           bloodSugarLevel,
           date
         }
       ];
-      await healthRef.doc(healthDoc.id).update({ BloodSugarData: updatedBloodSugarData });
-    } else {
-      await healthRef.add({
-        userId: decoded.userId,
-        BloodSugarData: [
-          {
-            bloodSugarLevel,
-            date
-          }
-        ]
-      });
+      await healthRef.doc(healthDoc.id).update({ bloodSugarData: updatedBloodSugarData });
     }
     res.status(201).json({
       status: 'Success',
