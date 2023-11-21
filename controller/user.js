@@ -50,18 +50,9 @@ const registerHandler = async(req,res,next)=>{
       userId: newUserRef.id,
     });
 
-    const tokenPayload = {
-      userId: newUserRef.id,
-    }
-
-    const token = jwt.sign(tokenPayload, jwtKey, {
-      algorithm: 'HS256'
-    });
-
     res.status(201).json({
       status: "Success",
       message: "Register Successfull",
-      token
     })
   } catch (error) {
     res.status(error.status || 500).json({

@@ -48,9 +48,6 @@ paths:
                   message:
                     type: string
                     description: Message indicating successful registration.
-                  token:
-                    type: string
-                    description: JWT token for the user session.
         '400':
           description: Bad request, email has been registered
           content:
