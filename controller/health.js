@@ -14,22 +14,10 @@ const uploadBMI = async (req, res, next) => {
     const decoded = jwt.verify(req.token, jwtKey);
 
     let currentUserHealth = await healthRef.where('userId', '==', decoded.userId).get();
-
-    if (!currentUserHealth.empty) {
-      const healthDoc = currentUserHealth.docs[0];
-      const currentHealthData = healthDoc.data();
-      const updatedBMIData = [
-        ...currentHealthData.BMIData,
-        {
-          height,
-          weight,
-          date
-        }
-      ];
-      await healthRef.doc(healthDoc.id).update({ BMIData: updatedBMIData });
-    } else {
-      await healthRef.add({
-        userId: decoded.userId,
+    const healthDoc = currentUserHealth.docs[0];
+    const currentHealthData = healthDoc.data();
+    if(!currentHealthData.BMIData){
+      await healthRef.doc(healthDoc.id).update({
         BMIData: [
           {
             height,
@@ -38,7 +26,18 @@ const uploadBMI = async (req, res, next) => {
           }
         ]
       });
+    }else{
+      const updatedBMIData = [
+        ...currentHealthData.BMIData,
+        {
+          height,
+          weight,
+          date
+        }
+      ];
+      await healthRef.doc(healthDoc.id).update({ bloodSugarData: updatedBMIData });
     }
+   
     res.status(201).json({
       status: 'Success',
       message: 'BMI data uploaded successfully'
@@ -62,7 +61,7 @@ const uploadBloodSugar = async (req, res, next) => {
     let currentUserHealth = await healthRef.where('userId', '==', decoded.userId).get();
     const healthDoc = currentUserHealth.docs[0];
     const currentHealthData = healthDoc.data();
-    if(!currentHealthData.bloodSugarLevel){
+    if(!currentHealthData.bloodSugarData){
       await healthRef.doc(healthDoc.id).update({
         bloodSugarData: [
           {
@@ -75,7 +74,7 @@ const uploadBloodSugar = async (req, res, next) => {
       const updatedBloodSugarData = [
         ...currentHealthData.bloodSugarData,
         {
-          bloodSugarLevel,
+          level: bloodSugarLevel,
           date
         }
       ];
