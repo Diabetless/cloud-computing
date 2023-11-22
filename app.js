@@ -2,6 +2,9 @@ require('dotenv').config();
 const express = require("express");
 const cors = require('cors')
 const app = express();
+const swaggerUi = require('swagger-ui-express');
+const yaml = require('yamljs');
+const swaggerDocument = yaml.load('./API_DOC.yml')
 
 const userRoutes = require('./routes/user')
 const articlesRoutes = require('./routes/articles')
@@ -18,6 +21,7 @@ app.use(cors({
 app.use('/users', userRoutes);
 app.use('/articles', articlesRoutes);
 app.use('/meals', mealsRoutes);
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 app.use('/', (req,res,next)=>{
   res.status(404).json({
