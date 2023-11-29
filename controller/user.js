@@ -140,14 +140,17 @@ const editUserAccount = async(req,res,next)=>{
     const token = getToken(req.headers);
     const decoded = jwt.verify(token, jwtKey);
     const loggedUserRef = await usersref.doc(decoded.userId);
+    const loggedUserData = await loggedUserRef.get();
     const { fullName, email, username, birthday } = req.body;
     if(email){
       const registeredEmail = await usersref.where('email', '==', email).get();
-      if(!registeredEmail.empty && registeredEmail.docs[0].id != decoded.userId){
-        const error = new Error("Email has been registered");
-        error.status = 400;
-        throw error;
-      }
+      if(!registeredEmail.empty ){
+        if(registeredEmail.docs[0].id != decoded.userId){
+          const error = new Error("Email has been registered");
+          error.status = 400;
+          throw error;
+        }
+      } 
     }
     if(req.file){
       try {
@@ -175,7 +178,9 @@ const editUserAccount = async(req,res,next)=>{
       }
     }else{
       await loggedUserRef.update({
-        fullName, username, email, birthday,
+        fullName: fullName || loggedUserData.fullName,
+        username: username || loggedUserData.username,
+        email: email || loggedUserData.email,
       })
     }
     res.status(200).json({
