@@ -226,6 +226,91 @@ paths:
                   message:
                     type: string
                     description: Error message indicating the email has already been registered.
+  /users/bmi:
+    post:
+      summary: post current bmi user's data
+      security:
+        - bearerAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                height:
+                  type: number
+                  description: user's height in centimeter
+                weight:
+                  type: number
+                  description: user's weight in kilogram
+      responses:
+        '201':
+          description: Successfully Updated User BMI
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    description: status of the operation.
+                  message:
+                    type: string
+                    description: Message indicating successfully added user BMI data.
+        '401':
+          description: Bad request, token is required
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    description: Status of the operation.
+                  message:
+                    type: string
+                    description: Error message indicating the user need to login.
+  /users/blood-sugar:
+    post:
+      summary: post current blood sugar user's data
+      security:
+        - bearerAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                bloodSugarLevel:
+                  type: number
+                  description: blood sugar level in mg/dl
+      responses:
+        '201':
+          description: Successfully Updated User Blood Sugar Data
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    description: status of the operation.
+                  message:
+                    type: string
+                    description: Message indicating successfully added user Blood sugar data.
+        '401':
+          description: Bad request, token is required
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    description: Status of the operation.
+                  message:
+                    type: string
+                    description: Error message indicating the user need to login.
   /articles:
     get:
       summary: All Articles

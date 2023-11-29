@@ -143,7 +143,7 @@ const editUserAccount = async(req,res,next)=>{
     const { fullName, email, username, birthday } = req.body;
     if(email){
       const registeredEmail = await usersref.where('email', '==', email).get();
-      if(!registeredEmail.empty){
+      if(!registeredEmail.empty && registeredEmail.docs[0].id != decoded.userId){
         const error = new Error("Email has been registered");
         error.status = 400;
         throw error;
