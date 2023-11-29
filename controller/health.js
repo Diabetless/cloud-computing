@@ -47,7 +47,7 @@ const uploadBMI = async (req, res, next) => {
           date
         }
       ];
-      await healthRef.doc(healthDoc.id).update({ bloodSugarData: updatedBMIData });
+      await healthRef.doc(healthDoc.id).update({ BMIData: updatedBMIData });
     }
    
     res.status(201).json({
