@@ -109,11 +109,51 @@ const getUserHealthData = async(req,res,next)=>{
     const token = getToken(req.headers);
     const decoded = jwt.verify(token, jwtKey);
     const loggedhealthRef = await db.collection('personal_health').where('userId', '==', decoded.userId).get();
+    let BMIData, bloodSugarData;
+    if(loggedhealthRef.docs[0].data().BMIData){
+      BMIData = loggedhealthRef.docs[0].data().BMIData.map(doc=>{
+        const dateObject = new Date(doc.date._seconds * 1000); 
+        const formattedDate = dateObject.toLocaleString("en-US", {
+          timeZone: "UTC", 
+          timeZoneName: "short",
+          month: "long",
+          day: "numeric",
+          year: "numeric",
+          hour: "numeric",
+          minute: "numeric",
+          second: "numeric"
+        });
+        return({
+          weight: doc.weight,
+          height: doc.height,
+          date: formattedDate
+        })
+      }) 
+    }
+    if(loggedhealthRef.docs[0].data().bloodSugarData){
+      bloodSugarData = loggedhealthRef.docs[0].data().bloodSugarData.map(doc=>{
+        const dateObject = new Date(doc.date._seconds * 1000); 
+        const formattedDate = dateObject.toLocaleString("en-US", {
+          timeZone: "UTC", 
+          timeZoneName: "short",
+          month: "long",
+          day: "numeric",
+          year: "numeric",
+          hour: "numeric",
+          minute: "numeric",
+          second: "numeric"
+        });
+        return({
+          level: doc.level,
+          date: formattedDate
+        })
+      })
+    }
     res.status(200).json({
       status: "Success",
       message: "Succesfully Fetch User Health Data",
-      BMIData: loggedhealthRef.docs[0].BMIData || null,
-      bloodSugarData: loggedhealthRef.docs[0].bloodSugarData || null
+      BMIData: BMIData || null,
+      bloodSugarData: bloodSugarData || null
     })
   } catch (error) {
     res.status(error.status || 500).json({
