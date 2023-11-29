@@ -5,6 +5,18 @@ require('dotenv').config();
 
 const jwtKey = process.env.JWT_KEY;
 
+const getToken = (headers) => {
+  const authorizationHeader = headers.authorization;
+  if (authorizationHeader && authorizationHeader.startsWith('Bearer ')) {
+      return (authorizationHeader.substring(7)); // Remove 'Bearer ' from the header
+  }
+  else {
+      const error = new Error("You need to login");
+      error.status = 401;
+      throw error;
+  }
+}
+
 const uploadBMI = async (req, res, next) => {
   try {
     const { height, weight } = req.body;
@@ -92,6 +104,25 @@ const uploadBloodSugar = async (req, res, next) => {
   }
 }
 
+const getUserHealthData = async(req,res,next)=>{
+  try {
+    const token = getToken(req.headers);
+    const decoded = jwt.verify(token, jwtKey);
+    const loggedhealthRef = await db.collection('personal_health').where('userId', '==', decoded.userId).get();
+    res.status(200).json({
+      status: "Success",
+      message: "Succesfully Fetch User Health Data",
+      BMIData: loggedhealthRef.docs[0].BMIData || null,
+      bloodSugarData: loggedhealthRef.docs[0].bloodSugarData || null
+    })
+  } catch (error) {
+    res.status(error.status || 500).json({
+      status: "Error",
+      message: error.message
+    })
+  }
+}
+
 module.exports = {
-  uploadBMI, uploadBloodSugar
+  uploadBMI, uploadBloodSugar, getUserHealthData
 }
