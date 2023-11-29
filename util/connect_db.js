@@ -9,3 +9,5 @@ initializeApp({
 });
 
 const db = getFirestore();
+
+module.exports = db;
