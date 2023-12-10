@@ -14,7 +14,7 @@ COPY . .
 RUN npm install
 
 RUN echo "List Project"
-RUN ls / && cat /app/firebase-credentials.json
+RUN ls / && cat ./firebase-credentials.json
 
 ENV PORT 5000
 EXPOSE 5000  
