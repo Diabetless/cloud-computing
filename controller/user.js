@@ -152,6 +152,30 @@ const editUserAccount = async(req,res,next)=>{
         }
       } 
     }
+    await loggedUserRef.update({
+      fullName: fullName || loggedUserData.fullName,
+      username: username || loggedUserData.username,
+      email: email || loggedUserData.email,
+      birthday: birthday || loggedUserData.birthday || ""
+    })
+    res.status(200).json({
+      status: "Success",
+      message: "Succesfully update user profile"
+    })
+  } catch (error) {
+    res.status(error.status || 500).json({
+      status: "Error",
+      message: error.message
+    })
+  }
+}
+
+const editUserProfilePicture = async(req,res,next)=>{
+  try {
+    const usersref = db.collection('users');
+    const token = getToken(req.headers);
+    const decoded = jwt.verify(token, jwtKey);
+    const loggedUserRef = await usersref.doc(decoded.userId);
     if(req.file){
       try {
         const file = req.file;
@@ -166,9 +190,7 @@ const editUserAccount = async(req,res,next)=>{
         blobStream.on('finish', async () => {
           await blob.makePublic();
           const imageUrl = `https://storage.googleapis.com/${bucket.name}/${blob.name}`;
-  
           await loggedUserRef.update({
-            fullName, username, email, birthday,
             profilePicture: imageUrl
           })
         });
@@ -177,11 +199,9 @@ const editUserAccount = async(req,res,next)=>{
         console.log(error);
       }
     }else{
-      await loggedUserRef.update({
-        fullName: fullName || loggedUserData.fullName,
-        username: username || loggedUserData.username,
-        email: email || loggedUserData.email,
-      })
+      const error = new Error("Image is empty!");
+      error.status = 400;
+      throw error;
     }
     res.status(200).json({
       status: "Success",
@@ -196,5 +216,5 @@ const editUserAccount = async(req,res,next)=>{
 }
 
 module.exports = {
-  registerHandler, loginHandler, getUserInfo, editUserAccount
+  registerHandler, loginHandler, getUserInfo, editUserAccount, editUserProfilePicture
 }
