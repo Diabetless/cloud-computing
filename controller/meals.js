@@ -4,10 +4,33 @@ const db = require('../util/connect_db');
 const { v4: uuidv4 } = require('uuid')
 const bucket = require('../util/connect_storage')
 
+const jwtKey = process.env.JWT_KEY;
+
+const getToken = (headers) => {
+  const authorizationHeader = headers.authorization;
+  if (authorizationHeader && authorizationHeader.startsWith('Bearer ')) {
+      return (authorizationHeader.substring(7)); // Remove 'Bearer ' from the header
+  }
+  else {
+      const error = new Error("You need to login");
+      error.status = 401;
+      throw error;
+  }
+}
+
+
 const postMealsHandler = async (req, res, next) => {
   try{
-    const mealsRef = db.collection('meals');
+    const token = getToken(req.headers);
+    const decoded = jwt.verify(token, jwtKey);
+    const loggedUserRef = await db.collection('users').doc(decoded.userId).get();
+    if (!loggedUserRef.exists) {
+      const error = new Error("User doesn't exist!");
+      error.status = 400;
+      throw error;
+    }
 
+    const mealsRef = db.collection('meals');
     const uniqueId = uuidv4();
     let { title, content, glycemicIndex, glycemicLoad, calorie, protein, carbs, fats } = req.body;
     const file = req.file;
@@ -73,6 +96,15 @@ const postMealsHandler = async (req, res, next) => {
 
 const putMealsHandler = async (req, res, nex) => {
   try{
+    const token = getToken(req.headers);
+    const decoded = jwt.verify(token, jwtKey);
+    const loggedUserRef = await db.collection('users').doc(decoded.userId).get();
+    if (!loggedUserRef.exists) {
+      const error = new Error("User doesn't exist!");
+      error.status = 400;
+      throw error;
+    }
+
     const id = req.params.id;
     const mealsRef = db.collection('meals').doc(`${id}`);
     const doc = await mealsRef.get();
