@@ -184,7 +184,7 @@ paths:
         - bearerAuth: []
       requestBody:
         content:
-          application/json:
+          multipart/form-data:
             schema:
               type: object
               properties:
@@ -194,6 +194,10 @@ paths:
                 username:
                   type: string
                   description: User's username
+                image:
+                  type: string
+                  format: binary
+                  description: User's profile picture.
                 email:
                   type: string
                   description: User's email which has not been registered
@@ -224,48 +228,6 @@ paths:
                   message:
                     type: string
                     description: Error message indicating the email has already been registered.
-  /users/profile-picture:
-    put:
-      summary: User Account Data
-      security:
-        - bearerAuth: []
-      requestBody:
-        content:
-          multipart/form-data:
-            schema:
-              type: object
-              properties:
-                image:
-                  type: string
-                  format: binary
-                  description: User's profile picture.
-      responses:
-        '200':
-          description: Successfully Updated User
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  status:
-                    type: string
-                    description: status of the operation.
-                  message:
-                    type: string
-                    description: Message indicating the article successfully created.
-        '400':
-          description: Bad request, picture is empty
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  status:
-                    type: string
-                    description: Status of the operation.
-                  message:
-                    type: string
-                    description: Error message indicating the picture is empty
   /users/health:
     get:
       summary: get user bmi & blood sugar data
@@ -468,7 +430,7 @@ paths:
                     description: Status of the operation.
                   message:
                     type: string
-                    description: Message indicating the Blood Sugar successfully Deleted.
+                    description: Message indicating the Blood Sugar successfully Updated.
         "404":
           description: Blood Sugar Data not found.
           content:
@@ -532,6 +494,70 @@ paths:
                   message:
                     type: string
                     description: Error message indicating user must login first.
+    post:
+      summary: Create a New Article
+      security:
+        - bearerAuth: []
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                  description: The title of article.
+                content:
+                  type: string
+                  description: The content of article.
+                image:
+                  type: string
+                  format: binary
+                  description: The image of article.
+              required:
+                - title
+                - content
+                - image
+      responses:
+        "201":
+          description: Article successfully created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    description: Status of the operation.
+                  message:
+                    type: string
+                    description: Message indicating the article successfully created.
+        "400":
+          description: The field required empty.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    description: Status of the operation.
+                  message:
+                    type: string
+                    description: Field required empty.
+        "403":
+          description: "Token must be included in bearer at req.headers"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    description: Status of the operation.
+                  message:
+                    type: string
+                    description: Error message indicating user must login first.
 
   /articles/{id}:
     get:
@@ -576,6 +602,72 @@ paths:
                       content:
                         type: string
                         example: Content
+        "403":
+          description: "Token must be included in bearer at req.headers"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    description: Status of the operation.
+                  message:
+                    type: string
+                    description: Error message indicating user must login first.
+        "404":
+          description: Article not found.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    description: Status of the operation.
+                  message:
+                    type: string
+                    description: Indication the article not found.
+    put:
+      summary: Update the exsiting article.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                  description: The title of article.
+                content:
+                  type: string
+                  description: The content of article.
+                image:
+                  type: string
+                  format: binary
+                  description: The image of article.
+      responses:
+        "200":
+          description: Article successfully Updated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    description: Status of the operation.
+                  message:
+                    type: string
+                    description: Message indicating the article successfully Updated.
         "403":
           description: "Token must be included in bearer at req.headers"
           content:
@@ -670,6 +762,94 @@ paths:
                   message:
                     type: string
                     description: Error message indicating user must login first.
+    post:
+      summary: Create a New Meal
+      security:
+        - bearerAuth: []
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                  description: The title of meal.
+                content:
+                  type: string
+                  description: The content of meal.
+                image:
+                  type: string
+                  format: binary
+                  description: The image of meal.
+                glycemicIndex:
+                  type: string
+                  description: The Glycemic Index of meal.
+                glycemicLoad:
+                  type: string
+                  description: The Glycemic Load of meal.
+                calorie:
+                  type: string
+                  description: The Calorie of meal.
+                protein:
+                  type: string
+                  description: The Protein of meal.
+                carbs:
+                  type: string
+                  description: The Carbo of meal.
+                fats:
+                  type: string
+                  description: The Fats of meal.
+              required:
+                - title
+                - content
+                - image
+                - glycemicIndex
+                - glycemicLoad
+                - calorie
+                - protein
+                - carbs
+                - fats
+      responses:
+        "201":
+          description: Meals successfully created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    description: Status of the operation.
+                  message:
+                    type: string
+                    description: Message indicating the meal successfully created.
+        "400":
+          description: The field required empty.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    description: Status of the operation.
+                  message:
+                    type: string
+                    description: Field required empty.
+        "403":
+          description: "Token must be included in bearer at req.headers"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    description: Status of the operation.
+                  message:
+                    type: string
+                    description: Error message indicating user must login first.
 
   /meals/{id}:
     get:
@@ -732,6 +912,90 @@ paths:
                       content:
                         type: string
                         example: Content
+        "403":
+          description: "Token must be included in bearer at req.headers"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    description: Status of the operation.
+                  message:
+                    type: string
+                    description: Error message indicating user must login first.
+        "404":
+          description: Meal not found.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    description: Status of the operation.
+                  message:
+                    type: string
+                    description: Indication the meal not found.
+    put:
+      summary: Update the exsiting meal.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                  description: The title of meal.
+                content:
+                  type: string
+                  description: The content of meal.
+                image:
+                  type: string
+                  format: binary
+                  description: The image of meal.
+                glycemicIndex:
+                  type: string
+                  description: The Glycemic Index of meal.
+                glycemicLoad:
+                  type: string
+                  description: The Glycemic Load of meal.
+                calorie:
+                  type: string
+                  description: The Calorie of meal.
+                protein:
+                  type: string
+                  description: The Protein of meal.
+                carbs:
+                  type: string
+                  description: The Carbo of meal.
+                fats:
+                  type: string
+                  description: The Fats of meal.
+      responses:
+        "200":
+          description: Meal successfully Updated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    description: Status of the operation.
+                  message:
+                    type: string
+                    description: Message indicating the meal successfully Updated.
         "403":
           description: "Token must be included in bearer at req.headers"
           content:
