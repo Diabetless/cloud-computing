@@ -19,4 +19,4 @@ RUN ls /app && cat /app/firebase-credentials.json
 ENV PORT 5000
 EXPOSE 5000  
 
-CMD [ "npm", "run", "start" ]
+CMD [ "cd", "/app", "&&", "npm", "run", "start" ]
