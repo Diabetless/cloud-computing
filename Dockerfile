@@ -16,9 +16,6 @@ RUN npm install
 
 RUN chmod +x /app/run.sh
 
-RUN echo "List Project"
-RUN ls /app && cat ./firebase-credentials.json
-
 ENV PORT 5000
 EXPOSE 5000 
 
