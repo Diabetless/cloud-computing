@@ -184,7 +184,7 @@ paths:
         - bearerAuth: []
       requestBody:
         content:
-          multipart/form-data:
+          application/json:
             schema:
               type: object
               properties:
@@ -194,10 +194,6 @@ paths:
                 username:
                   type: string
                   description: User's username
-                image:
-                  type: string
-                  format: binary
-                  description: User's profile picture.
                 email:
                   type: string
                   description: User's email which has not been registered
@@ -228,6 +224,48 @@ paths:
                   message:
                     type: string
                     description: Error message indicating the email has already been registered.
+  /users/profile-picture:
+    put:
+      summary: User Account Data
+      security:
+        - bearerAuth: []
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                image:
+                  type: string
+                  format: binary
+                  description: User's profile picture.
+      responses:
+        '200':
+          description: Successfully Updated User
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    description: status of the operation.
+                  message:
+                    type: string
+                    description: Message indicating the article successfully created.
+        '400':
+          description: Bad request, picture is empty
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    description: Status of the operation.
+                  message:
+                    type: string
+                    description: Error message indicating the picture is empty
   /users/health:
     get:
       summary: get user bmi & blood sugar data
