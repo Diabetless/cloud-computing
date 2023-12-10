@@ -7,16 +7,21 @@ RUN apt-get update \
   && curl -fsSL https://deb.nodesource.com/setup_18.x | bash - \
   && apt-get install -y nodejs
 
-WORKDIR /
+WORKDIR /app
 
 COPY . .
+COPY run.sh .
 
 RUN npm install
 
+RUN chmod +x /app/run.sh
+
 RUN echo "List Project"
-RUN ls / && cat ./firebase-credentials.json
+RUN ls /app && cat ./firebase-credentials.json
 
 ENV PORT 5000
-EXPOSE 5000  
+EXPOSE 5000 
 
-CMD [ "npm", "run", "start" ]
+ENTRYPOINT ["/app/run.sh"]
+
+CMD ["/app/run.sh"]
