@@ -87,9 +87,9 @@ const predict = async (buffer) => {
 (async () => {
   try {
     await loadModel();
-    module.exports = predict;
   } catch (err) {
     console.error('Error during model loading:', err);
   }
 })();
 
+module.exports = predict;
