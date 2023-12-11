@@ -25,17 +25,12 @@ RUN apt-get install -y make
 # Install GCC
 RUN apt-get install -y build-essential
 
-# Set working directory
 WORKDIR /app
 
-# (Optional) Copy your application files
 COPY . .
 
-# (Optional) Install your Node.js dependencies
 RUN npm install
 
-# Expose ports (modify based on your application)
 EXPOSE 5000
 
-# Start your application (modify based on your application)
 CMD [ "npm", "run", "start"]

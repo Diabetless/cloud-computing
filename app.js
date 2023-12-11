@@ -9,6 +9,7 @@ const swaggerDocument = yaml.load('./API_DOC.yml')
 const userRoutes = require('./routes/user')
 const articlesRoutes = require('./routes/articles')
 const mealsRoutes = require('./routes/meals')
+const predictFood = require('./util/predictImage');
 
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
