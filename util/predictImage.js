@@ -2,7 +2,7 @@ const tf = require('@tensorflow/tfjs-node');
 const classes = require('../model/foodClassification.json');
 
 const loadModel = async () => {
-  const modelFile = tf.io.fileSystem('../model/food_detection_model/model.json');
+  const modelFile = tf.io.fileSystem('./model/food_detection_model/model.json');
   const model = await tf.loadGraphModel(modelFile);
   return new Promise((resolve) => {
     resolve(model);
