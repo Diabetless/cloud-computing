@@ -1,7 +1,10 @@
 FROM ubuntu:20.04
 
 RUN apt-get update \
-  && apt-get install -y python3 python3-pip python3-dev \
+  && apt-get install -y software-properties-common \
+  && add-apt-repository ppa:deadsnakes/ppa \
+  && apt-get install -y python3.9 python3.9-dev python3.9-venv \
+  && apt-get install -y python3-pip python3-dev \
   build-essential gcc g++ make \
   curl gnupg \
   && curl -fsSL https://deb.nodesource.com/setup_18.x | bash - \
@@ -15,8 +18,8 @@ COPY run.sh .
 RUN npm install
 RUN chmod +x /app/run.sh
 
-RUN echo "Check Python, GCC, and Node Version"
-RUN python3 --version && gcc --version && node -v
+RUN echo "Check Python, GCC, Make, and Node Version"
+RUN python3 --version && gcc --version && make --version && node -v  && npm -v
 
 ENV PORT 5000
 EXPOSE 5000 
