@@ -1,10 +1,12 @@
 FROM ubuntu:20.04
 
+ENV TZ=Asia/Jakarta
+
 RUN apt-get update \
   && apt-get install -y python3.9 python3-pip python3.9-dev \
   build-essential gcc g++ make \
   curl gnupg \
-  && curl -fsSL https://deb.nodesource.com/setup_18.x | bash - \
+  && curl -fsSL https://deb.nodesource.com/setup_18.x | bash -s -- --skip-tzdata \
   && apt-get install -y nodejs
 
 WORKDIR /app
