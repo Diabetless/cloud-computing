@@ -1,8 +1,10 @@
 FROM ubuntu:20.04
 
-ENV TZ=Asia/Jakarta
+ENV TZ=Asia/Bangkok
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
 RUN apt-get update \
+  && apt-get install -y tzdata \
   && apt-get install -y python3.9 python3-pip python3.9-dev \
   build-essential gcc g++ make \
   curl gnupg \
