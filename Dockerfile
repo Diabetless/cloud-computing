@@ -1,7 +1,7 @@
 FROM ubuntu:20.04
 
 RUN apt-get update \
-  && apt-get install -y python3.9 python3-pip python3.9-dev \ 
+  && apt-get install -y python3 python3-pip python3-dev \
   build-essential gcc g++ make \
   curl gnupg \
   && curl -fsSL https://deb.nodesource.com/setup_18.x | bash - \
@@ -16,10 +16,10 @@ RUN npm install
 RUN chmod +x /app/run.sh
 
 RUN echo "Check Python, GCC, Make, and Node Version"
-RUN python3.9 --version && gcc --version && make --version && node -v  && npm -v
+RUN python3 --version && gcc --version && make --version && node -v
 
 ENV PORT 5000
-EXPOSE 5000 
+EXPOSE 5000
 
 ENTRYPOINT ["/app/run.sh"]
 
