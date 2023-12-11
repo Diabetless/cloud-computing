@@ -1,12 +1,16 @@
 const tf = require('@tensorflow/tfjs-node');
 const classes = require('../model/foodClassification.json');
 
+let model;
+
 const loadModel = async () => {
-  const modelFile = tf.io.fileSystem('./model/food_detection_model/model.json');
-  const model = await tf.loadGraphModel(modelFile);
-  return new Promise((resolve) => {
-    resolve(model);
-  });
+  try {
+    const modelFile = tf.io.fileSystem('./model/food_detection_model/model.json');
+    model = await tf.loadGraphModel(modelFile);
+    return model; 
+  } catch (error) {
+    console.log(error.message);
+  }
 };
 
 const preProcess = async (buffer) => {
@@ -80,11 +84,12 @@ const predict = async (buffer) => {
 
 };
 
-let model;
-
-loadModel()
-.then(modelResult=>{
-  model = modelResult;
-  module.exports = predict;
-})
+(async () => {
+  try {
+    await loadModel();
+    module.exports = predict;
+  } catch (err) {
+    console.error('Error during model loading:', err);
+  }
+})();
 
