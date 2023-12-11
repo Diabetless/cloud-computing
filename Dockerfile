@@ -13,8 +13,10 @@ COPY . .
 COPY run.sh .
 
 RUN npm install
-
 RUN chmod +x /app/run.sh
+
+RUN echo "Check Python, GCC, and Node Version"
+RUN python --version && gcc --version && node -v
 
 ENV PORT 5000
 EXPOSE 5000 
