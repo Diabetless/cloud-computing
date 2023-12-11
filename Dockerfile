@@ -20,7 +20,7 @@ RUN npm install
 RUN chmod +x /app/run.sh
 
 RUN echo "Check Python, GCC, Make, and Node Version"
-RUN python3 --version && gcc --version && make --version && node -v
+RUN python3.9 --version && gcc --version && make --version && node -v && npm -v
 
 ENV PORT 5000
 EXPOSE 5000
