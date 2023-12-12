@@ -271,4 +271,4 @@ module.exports = {
   getUserHealthData,
   deleteBMIDataById,
   deleteBloodSugarDataById
-};
+}
