@@ -217,6 +217,9 @@ paths:
                 email:
                   type: string
                   description: User's email which has not been registered
+                birthday:
+                  type: string
+                  description: date month year
       responses:
         "200":
           description: Successfully Updated User
