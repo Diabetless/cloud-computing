@@ -7,9 +7,20 @@ servers:
     description: Development server
   - url: http://localhost:5000
     description: Local Development server
+tags:
+  - name: User_Account
+    description: All about user account
+  - name: Articles
+    description: All about healthy lifestyle article
+  - name: Meals
+    description: Meal plan & nutrition fact
+  - name: Personal_Health
+    description: Track BMI & blood sugar level
 paths:
   /users/register:
     post:
+      tags: 
+        - User_Account
       summary: Register a new user
       requestBody:
         content:
@@ -63,9 +74,10 @@ paths:
                   message:
                     type: string
                     description: Error message indicating the email has already been registered.
-
   /users/login:
     post:
+      tags: 
+        - User_Account
       summary: User login
       requestBody:
         content:
@@ -116,6 +128,8 @@ paths:
                     description: Error message indicating invalid email or password.
   /users:
     get:
+      tags: 
+        - User_Account
       summary: User Account Data
       security:
         - bearerAuth: []
@@ -179,6 +193,8 @@ paths:
                     description: Error message indicating user doesn't exist".
   /users/edit-profile:
     put:
+      tags: 
+        - User_Account
       summary: User Account Data
       security:
         - bearerAuth: []
@@ -230,6 +246,8 @@ paths:
                     description: Error message indicating the email has already been registered.
   /users/profile-picture:
     put:
+      tags: 
+        - User_Account
       summary: User Account Data
       security:
         - bearerAuth: []
@@ -272,6 +290,8 @@ paths:
                     description: Error message indicating the picture is empty
   /users/health:
     get:
+      tags:
+        - Personal_Health
       summary: get user bmi & blood sugar data
       security:
         - bearerAuth: []
@@ -322,9 +342,10 @@ paths:
                         level:
                           type: number
                           description: Sugar level in units (mg/dL).
-
   /users/bmi:
     post:
+      tags:
+        - Personal_Health
       summary: post current bmi user's data
       security:
         - bearerAuth: []
@@ -369,6 +390,8 @@ paths:
                     description: Error message indicating the user need to login.
   /users/bmi/{id}:
     delete:
+      tags:
+        - Personal_Health
       summary: Delete the BMI data users by id.
       security:
         - bearerAuth: []
@@ -405,9 +428,10 @@ paths:
                   message:
                     type: string
                     description: Indication the article not found.
-
   /users/blood-sugar:
     post:
+      tags:
+        - Personal_Health
       summary: post current blood sugar user's data
       security:
         - bearerAuth: []
@@ -450,6 +474,8 @@ paths:
   
   /users/blood-sugar/{id}:
     delete:
+      tags:
+        - Personal_Health
       summary: Delete the Blood Sugar data users by id.
       security:
         - bearerAuth: []
@@ -489,6 +515,8 @@ paths:
 
   /articles:
     get:
+      tags:
+        - Articles
       summary: All Articles
       security:
         - bearerAuth: []
@@ -537,6 +565,8 @@ paths:
                     type: string
                     description: Error message indicating user must login first.
     post:
+      tags:
+        - Articles
       summary: Create a New Article
       security:
         - bearerAuth: []
@@ -603,6 +633,8 @@ paths:
 
   /articles/{id}:
     get:
+      tags:
+        - Articles
       summary: Get spesific article
       security:
         - bearerAuth: []
@@ -671,6 +703,8 @@ paths:
                     type: string
                     description: Indication the article not found.
     put:
+      tags:
+        - Articles
       summary: Update the exsiting article.
       security:
         - bearerAuth: []
@@ -736,9 +770,10 @@ paths:
                   message:
                     type: string
                     description: Indication the article not found.
-
   /meals:
     get:
+      tags:
+        - Meals
       summary: All Meals
       security:
         - bearerAuth: []
@@ -805,6 +840,8 @@ paths:
                     type: string
                     description: Error message indicating user must login first.
     post:
+      tags:
+        - Meals
       summary: Create a New Meal
       security:
         - bearerAuth: []
@@ -892,9 +929,10 @@ paths:
                   message:
                     type: string
                     description: Error message indicating user must login first.
-
   /meals/{id}:
     get:
+      tags:
+        - Meals
       summary: Get spesific meal
       security:
         - bearerAuth: []
@@ -981,6 +1019,8 @@ paths:
                     type: string
                     description: Indication the meal not found.
     put:
+      tags:
+        - Meals
       summary: Update the exsiting meal.
       security:
         - bearerAuth: []
