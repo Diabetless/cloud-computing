@@ -1,9 +1,17 @@
 const predict = require("../util/predictImage");
+const recomendation = require("../util/recomendation");
 
 const predictFood = async(req,res,next)=>{
   try {
     if(req.file){
-      const result = await predict(req.file.buffer);
+      const predictResult = await predict(req.file.buffer);
+      const result = []
+
+      for (const predicted of predictResult) {
+        const data =  await recomendation(predicted);
+        result.push(data);
+      }
+
       res.status(200).json({
         status: "Success",
         result

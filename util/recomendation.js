@@ -23,13 +23,49 @@ const recomendation = async (detectedName) => {
       
       recomendationDocs.forEach((docs) => {
         const data = docs.data();
-        allRecomendationBasedTags.push(data);
+
+        const nutrition_fact = {
+          GL: data.GL,
+          GL_Level: data.GL_Level,
+          GI: data.GI,
+          GI_Level: data.GI_Level,
+          Proteins: data.Proteins,
+          Carbohydrates: data.Carbohydrates,
+          Fats: data.Fats,
+          Calories: data.Calories,
+        }
+
+        const modifiedData = {
+          name: data.name,
+          type: data.type,
+          nutrition_fact,
+          tags: data.tags,
+          serving: data.serving,
+          imageUrl: data.imageUrl,
+        }
+
+        allRecomendationBasedTags.push(modifiedData);
       })
     }
   }
 
+  const nutrition_fact = {
+    GL: detectedData.GL,
+    GL_Level: detectedData.GL_Level,
+    GI: detectedData.GI,
+    GI_Level: detectedData.GI_Level,
+    Proteins: detectedData.Proteins,
+    Carbohydrates: detectedData.Carbohydrates,
+    Fats: detectedData.Fats,
+    Calories: detectedData.Calories,
+  }
+
   return {
-    ...detectedData,
+    name: detectedData.name,
+    type: detectedData.type,
+    nutrition_fact,
+    tags,
+    serving: detectedData.serving,
     ...(allRecomendationBasedTags.length > 0 ? { recomendation: allRecomendationBasedTags } : {})
   }
   
