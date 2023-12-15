@@ -1,5 +1,5 @@
 const predict = require("../util/predictImage");
-const recomendation = require("../util/recomendation");
+const recommendation = require("../util/recommendation");
 
 const predictFood = async(req,res,next)=>{
   try {
@@ -8,7 +8,7 @@ const predictFood = async(req,res,next)=>{
       const result = []
 
       for (const predicted of predictResult) {
-        const data =  await recomendation(predicted);
+        const data =  await recommendation(predicted);
         result.push(data);
       }
 

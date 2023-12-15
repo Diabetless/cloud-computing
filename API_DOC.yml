@@ -1118,7 +1118,7 @@ paths:
                 - image
       responses:
         "200":
-          description: Nutrition Fatcs and Recomendation
+          description: Nutrition Fatcs and Recommendation
           content:
             application/json:
               schema:
@@ -1160,7 +1160,7 @@ paths:
                             type: "string"
                         serving:
                           type: "string"
-                        recomendation:
+                        recommendation:
                           type: "array"
                           items:
                             type: "object"
