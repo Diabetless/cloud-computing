@@ -9,6 +9,7 @@ const swaggerDocument = yaml.load('./API_DOC.yml')
 const userRoutes = require('./routes/user')
 const articlesRoutes = require('./routes/articles')
 const mealsRoutes = require('./routes/meals')
+const foodsRoutes = require('./routes/foods')
 const predictFood = require('./util/predictImage');
 
 app.use(express.urlencoded({ extended: false }));
@@ -22,6 +23,7 @@ app.use(cors({
 app.use('/users', userRoutes);
 app.use('/articles', articlesRoutes);
 app.use('/meals', mealsRoutes);
+app.use('/foods', foodsRoutes);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 app.use('/', (req,res,next)=>{
