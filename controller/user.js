@@ -139,8 +139,8 @@ const editUserAccount = async(req,res,next)=>{
     const usersref = db.collection('users');
     const token = getToken(req.headers);
     const decoded = jwt.verify(token, jwtKey);
-    const loggedUserRef = await usersref.doc(decoded.userId);
-    const loggedUserData = await loggedUserRef.get();
+    const loggedUserRef = usersref.doc(decoded.userId);
+    const loggedUserData = (await loggedUserRef.get()).data();
     const { fullName, email, username, birthday } = req.body;
     if(email){
       const registeredEmail = await usersref.where('email', '==', email).get();

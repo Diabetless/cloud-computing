@@ -210,10 +210,6 @@ paths:
                 username:
                   type: string
                   description: User's username
-                image:
-                  type: string
-                  format: binary
-                  description: User's profile picture.
                 email:
                   type: string
                   description: User's email which has not been registered
