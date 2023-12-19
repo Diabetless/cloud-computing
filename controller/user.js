@@ -170,6 +170,34 @@ const editUserAccount = async(req,res,next)=>{
   }
 }
 
+const editUserPassword = async(req,res,next)=>{
+  try {
+    const usersref = db.collection('users');
+    const token = getToken(req.headers);
+    const decoded = jwt.verify(token, jwtKey);
+    const loggedUserRef = await usersref.doc(decoded.userId);
+    const loggedUserData = await loggedUserRef.get();
+    const { password } = req.body;
+    if(!password){
+      const error = new Error("Password can't be empty!");
+      error.status = 400;
+      throw error;
+    }
+    await loggedUserRef.update({
+      password: password
+    })
+    res.status(200).json({
+      status: "Success",
+      message: "Succesfully update user password"
+    })
+  } catch (error) {
+    res.status(error.status || 500).json({
+      status: "Error",
+      message: error.message
+    })
+  }
+}
+
 const editUserProfilePicture = async(req,res,next)=>{
   try {
     const usersref = db.collection('users');
@@ -216,5 +244,5 @@ const editUserProfilePicture = async(req,res,next)=>{
 }
 
 module.exports = {
-  registerHandler, loginHandler, getUserInfo, editUserAccount, editUserProfilePicture
+  registerHandler, loginHandler, getUserInfo, editUserAccount, editUserProfilePicture, editUserPassword
 }

@@ -5,7 +5,7 @@ const multer = require('multer');
 const storage = multer.memoryStorage();
 const upload = multer({storage: storage});
 
-const { registerHandler, loginHandler, getUserInfo, editUserAccount, editUserProfilePicture } = require('../controller/user');
+const { registerHandler, loginHandler, getUserInfo, editUserAccount, editUserProfilePicture, editUserPassword } = require('../controller/user');
 const { uploadBMI, uploadBloodSugar, getUserHealthData, deleteBMIDataById, deleteBloodSugarDataById } = require('../controller/health');
 const userVerification = require('../middleware/user_verif');
 
@@ -16,6 +16,8 @@ router.post('/login', loginHandler);
 router.get('/', getUserInfo);
 
 router.put('/edit-profile', editUserAccount);
+
+router.put('/edit-password', editUserPassword);
 
 router.put('/profile-picture', upload.single('image'), editUserProfilePicture);
 
