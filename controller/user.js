@@ -134,7 +134,7 @@ const getUserInfo = async(req,res,next)=>{
   }
 }
 
-const editUserAccount = async(req,res,next)=>{
+const editUserAccount = async (req, res, next)=>{
   try {
     const usersref = db.collection('users');
     const token = getToken(req.headers);
@@ -170,21 +170,23 @@ const editUserAccount = async(req,res,next)=>{
   }
 }
 
-const editUserPassword = async(req,res,next)=>{
+const editUserPassword = async (req, res, next)=>{
   try {
     const usersref = db.collection('users');
     const token = getToken(req.headers);
     const decoded = jwt.verify(token, jwtKey);
-    const loggedUserRef = await usersref.doc(decoded.userId);
-    const loggedUserData = await loggedUserRef.get();
+    const loggedUserRef = usersref.doc(decoded.userId);
+    const loggedUserData = (await loggedUserRef.get()).data();
     const { password } = req.body;
     if(!password){
       const error = new Error("Password can't be empty!");
       error.status = 400;
       throw error;
     }
+    
+    const hashedPassword = await bcrypt.hash(password, 10);
     await loggedUserRef.update({
-      password: password
+      password: hashedPassword
     })
     res.status(200).json({
       status: "Success",
