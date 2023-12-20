@@ -3,7 +3,7 @@ info:
   title: Diabetless API
   version: 1.0.0
 servers:
-  - url: https://deployed-model-sggimrersq-et.a.run.app
+  - url: https://backend-sggimrersq-et.a.run.app
     description: Development server
   - url: http://localhost:5000
     description: Local Development server
