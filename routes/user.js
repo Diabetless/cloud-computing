@@ -7,7 +7,7 @@ const upload = multer({storage: storage});
 
 const { registerHandler, loginHandler, getUserInfo, editUserAccount, editUserProfilePicture, editUserPassword } = require('../controller/user');
 const { uploadBMI, uploadBloodSugar, getUserHealthData, deleteBMIDataById, deleteBloodSugarDataById } = require('../controller/health');
-const userVerification = require('../middleware/user_verif');
+const userVerification = require('../middleware/token_verif');
 
 router.post('/register', registerHandler);
 

@@ -29,7 +29,12 @@ const postMealsHandler = async (req, res, next) => {
       error.status = 400;
       throw error;
     }
-
+    const userData = loggedUserRef.data();
+    if(userData.role !== "admin"){
+      const error = new Error("You don't have permission!");
+      error.status = 401;
+      throw error;
+    }
     const mealsRef = db.collection('meals');
     const uniqueId = uuidv4();
     let { title, content, glycemicIndex, glycemicLoad, calorie, protein, carbs, fats } = req.body;
@@ -104,7 +109,12 @@ const putMealsHandler = async (req, res, nex) => {
       error.status = 400;
       throw error;
     }
-
+    const userData = loggedUserRef.data();
+    if(userData.role !== "admin"){
+      const error = new Error("You don't have permission!");
+      error.status = 401;
+      throw error;
+    }
     const id = req.params.id;
     const mealsRef = db.collection('meals').doc(`${id}`);
     const doc = await mealsRef.get();
