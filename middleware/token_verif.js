@@ -20,6 +20,7 @@ const userVerification = async(req,res,next)=>{
     const token = getToken(req.headers);
     const decoded = jwt.verify(token, jwtKey);
     req.decoded = decoded;
+    next();
   } catch (error) {
     res.status(error.status || 500).json({
       status: "Error",

@@ -23,7 +23,7 @@ const uploadBMI = async (req, res, next) => {
     const date = new Date();
 
     const healthRef = db.collection("personal_health");
-    const decoded = jwt.verify(req.token, jwtKey);
+    const decoded = req.decoded
     const uniqueId = uuidv4();
 
     let currentUserHealth = await healthRef
@@ -73,7 +73,7 @@ const uploadBloodSugar = async (req, res, next) => {
     const date = new Date();
 
     const healthRef = db.collection("personal_health");
-    const decoded = jwt.verify(req.token, jwtKey);
+    const decoded = req.decoded
     const uniqueId = uuidv4();
 
     let currentUserHealth = await healthRef
@@ -186,8 +186,7 @@ const deleteBMIDataById = async (req, res, next) => {
   try{
     const id = req.params.id;
     const healthRef = db.collection("personal_health");
-    const token = getToken(req.headers);
-    const decoded = jwt.verify(token, jwtKey);
+    const decoded = req.decoded;
 
     let currentUserHealth = await healthRef
       .where("userId", "==", decoded.userId)
@@ -228,8 +227,7 @@ const deleteBloodSugarDataById = async (req, res, next) => {
     const id = req.params.id;
 
     const healthRef = db.collection("personal_health");
-    const token = getToken(req.headers);
-    const decoded = jwt.verify(token, jwtKey);
+    const decoded = req.decoded
 
     let currentUserHealth = await healthRef
       .where("userId", "==", decoded.userId)
