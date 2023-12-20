@@ -5,9 +5,22 @@ info:
 servers:
   - url: https://backend-sggimrersq-et.a.run.app
     description: Development server
+  - url: http://localhost:5000
+    description: Local Development server
+tags:
+  - name: User_Account
+    description: All about user account
+  - name: Articles
+    description: All about healthy lifestyle article
+  - name: Meals
+    description: Meal plan & nutrition fact
+  - name: Personal_Health
+    description: Track BMI & blood sugar level
 paths:
   /users/register:
     post:
+      tags: 
+        - User_Account
       summary: Register a new user
       requestBody:
         content:
@@ -35,7 +48,7 @@ paths:
                 - username
                 - password
       responses:
-        '201':
+        "201":
           description: User registered successfully
           content:
             application/json:
@@ -48,7 +61,7 @@ paths:
                   message:
                     type: string
                     description: Message indicating successful registration.
-        '400':
+        "400":
           description: Bad request, email has been registered
           content:
             application/json:
@@ -61,9 +74,10 @@ paths:
                   message:
                     type: string
                     description: Error message indicating the email has already been registered.
-
   /users/login:
     post:
+      tags: 
+        - User_Account
       summary: User login
       requestBody:
         content:
@@ -83,7 +97,7 @@ paths:
                 - email
                 - password
       responses:
-        '200':
+        "200":
           description: User logged in successfully
           content:
             application/json:
@@ -99,7 +113,7 @@ paths:
                   token:
                     type: string
                     description: JWT token for the user session.
-        '400':
+        "400":
           description: Wrong email or password
           content:
             application/json:
@@ -114,11 +128,13 @@ paths:
                     description: Error message indicating invalid email or password.
   /users:
     get:
+      tags: 
+        - User_Account
       summary: User Account Data
       security:
         - bearerAuth: []
       responses:
-        '200':
+        "200":
           description: Successfully Get User Account Data
           content:
             application/json:
@@ -149,7 +165,7 @@ paths:
                       birthday:
                         type: string
                         example: 07/11/2000
-        '403':
+        "403":
           description: "Token must be included in bearer at req.headers"
           content:
             application/json:
@@ -162,7 +178,7 @@ paths:
                   message:
                     type: string
                     description: Error message indicating user must login first.
-        '400':
+        "400":
           description: "User doesn't exist"
           content:
             application/json:
@@ -174,15 +190,17 @@ paths:
                     description: Status of the operation.
                   message:
                     type: string
-                    description: Error message indicating user doesn't exist". 
+                    description: Error message indicating user doesn't exist".
   /users/edit-profile:
     put:
-      summary: User Account Data
+      tags: 
+        - User_Account
+      summary: Edit User's Profile
       security:
         - bearerAuth: []
       requestBody:
         content:
-          multipart/form-data:
+          application/json:
             schema:
               type: object
               properties:
@@ -192,13 +210,99 @@ paths:
                 username:
                   type: string
                   description: User's username
+                email:
+                  type: string
+                  description: User's email which has not been registered
+                birthday:
+                  type: string
+                  description: date month year
+      responses:
+        "200":
+          description: Successfully Updated User
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    description: status of the operation.
+                  message:
+                    type: string
+                    description: Message indicating the article successfully created.
+        "400":
+          description: Bad request, email has been registered
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    description: Status of the operation.
+                  message:
+                    type: string
+                    description: Error message indicating the email has already been registered.
+  /users/edit-password:
+    put:
+      tags: 
+        - User_Account
+      summary: Edit User's Password
+      security:
+        - bearerAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                password:
+                  type: string
+                  description: user password
+      responses:
+        "200":
+          description: Successfully Updated User Password
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    description: status of the operation.
+                  message:
+                    type: string
+                    description: Message indicating the article successfully created.
+        "400":
+          description: Bad request, password can't be empty.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    description: Status of the operation.
+                  message:
+                    type: string
+                    description: Error message indicating the password is empty.
+  /users/profile-picture:
+    put:
+      tags: 
+        - User_Account
+      summary: User Account Data
+      security:
+        - bearerAuth: []
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
                 image:
                   type: string
                   format: binary
                   description: User's profile picture.
-                email:
-                  type: string
-                  description: User's email which has not been registered
       responses:
         '200':
           description: Successfully Updated User
@@ -214,7 +318,7 @@ paths:
                     type: string
                     description: Message indicating the article successfully created.
         '400':
-          description: Bad request, email has been registered
+          description: Bad request, picture is empty
           content:
             application/json:
               schema:
@@ -225,14 +329,16 @@ paths:
                     description: Status of the operation.
                   message:
                     type: string
-                    description: Error message indicating the email has already been registered.
+                    description: Error message indicating the picture is empty
   /users/health:
     get:
+      tags:
+        - Personal_Health
       summary: get user bmi & blood sugar data
       security:
         - bearerAuth: []
       responses:
-        '200':
+        "200":
           description: Successfully Updated User BMI
           content:
             application/json:
@@ -251,6 +357,9 @@ paths:
                     items:
                       type: object
                       properties:
+                        _id:
+                          type: string
+                          description: id record
                         date:
                           type: string
                           description: Date of the health data (e.g., "November 21, 2023 at 7:05:53 PM UTC+7").
@@ -266,15 +375,19 @@ paths:
                     items:
                       type: object
                       properties:
+                        _id:
+                          type: string
+                          description: id record
                         date:
                           type: string
                           description: Date of the health data (e.g., "November 21, 2023 at 7:05:53 PM UTC+7").
                         level:
                           type: number
                           description: Sugar level in units (mg/dL).
-
   /users/bmi:
     post:
+      tags:
+        - Personal_Health
       summary: post current bmi user's data
       security:
         - bearerAuth: []
@@ -291,7 +404,7 @@ paths:
                   type: number
                   description: user's weight in kilogram
       responses:
-        '201':
+        "201":
           description: Successfully Updated User BMI
           content:
             application/json:
@@ -304,7 +417,7 @@ paths:
                   message:
                     type: string
                     description: Message indicating successfully added user BMI data.
-        '401':
+        "401":
           description: Bad request, token is required
           content:
             application/json:
@@ -317,8 +430,50 @@ paths:
                   message:
                     type: string
                     description: Error message indicating the user need to login.
+  /users/bmi/{id}:
+    delete:
+      tags:
+        - Personal_Health
+      summary: Delete the BMI data users by id.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: BMI Data successfully Deleted
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    description: Status of the operation.
+                  message:
+                    type: string
+                    description: Message indicating the BMI successfully delete.
+        "404":
+          description: BMI Data not found.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    description: Status of the operation.
+                  message:
+                    type: string
+                    description: Indication the article not found.
   /users/blood-sugar:
     post:
+      tags:
+        - Personal_Health
       summary: post current blood sugar user's data
       security:
         - bearerAuth: []
@@ -332,7 +487,7 @@ paths:
                   type: number
                   description: blood sugar level in mg/dl
       responses:
-        '201':
+        "201":
           description: Successfully Updated User Blood Sugar Data
           content:
             application/json:
@@ -345,7 +500,7 @@ paths:
                   message:
                     type: string
                     description: Message indicating successfully added user Blood sugar data.
-        '401':
+        "401":
           description: Bad request, token is required
           content:
             application/json:
@@ -358,13 +513,55 @@ paths:
                   message:
                     type: string
                     description: Error message indicating the user need to login.
-  /articles:
-    get:
-      summary: All Articles
+  
+  /users/blood-sugar/{id}:
+    delete:
+      tags:
+        - Personal_Health
+      summary: Delete the Blood Sugar data users by id.
       security:
         - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
       responses:
-        '200':
+        "200":
+          description: Blood Sugar Data successfully Deleted
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    description: Status of the operation.
+                  message:
+                    type: string
+                    description: Message indicating the Blood Sugar successfully Updated.
+        "404":
+          description: Blood Sugar Data not found.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    description: Status of the operation.
+                  message:
+                    type: string
+                    description: Indication the article not found.
+
+  /articles:
+    get:
+      tags:
+        - Articles
+      summary: All Articles
+      responses:
+        "200":
           description: Successfully Get All Title and Post Date Articles
           content:
             application/json:
@@ -394,7 +591,7 @@ paths:
                         title:
                           type: string
                           example: TITLE
-        '403':
+        "403":
           description: "Token must be included in bearer at req.headers"
           content:
             application/json:
@@ -408,6 +605,8 @@ paths:
                     type: string
                     description: Error message indicating user must login first.
     post:
+      tags:
+        - Articles
       summary: Create a New Article
       security:
         - bearerAuth: []
@@ -432,7 +631,7 @@ paths:
                 - content
                 - image
       responses:
-        '201':
+        "201":
           description: Article successfully created
           content:
             application/json:
@@ -445,7 +644,7 @@ paths:
                   message:
                     type: string
                     description: Message indicating the article successfully created.
-        '400':
+        "400":
           description: The field required empty.
           content:
             application/json:
@@ -458,7 +657,7 @@ paths:
                   message:
                     type: string
                     description: Field required empty.
-        '403':
+        "403":
           description: "Token must be included in bearer at req.headers"
           content:
             application/json:
@@ -471,12 +670,12 @@ paths:
                   message:
                     type: string
                     description: Error message indicating user must login first.
-  
+
   /articles/{id}:
     get:
+      tags:
+        - Articles
       summary: Get spesific article
-      security:
-        - bearerAuth: []
       parameters:
         - name: id
           in: path
@@ -484,7 +683,7 @@ paths:
           schema:
             type: string
       responses:
-        '200':
+        "200":
           description: Successfully get the article
           content:
             application/json:
@@ -515,7 +714,7 @@ paths:
                       content:
                         type: string
                         example: Content
-        '403':
+        "403":
           description: "Token must be included in bearer at req.headers"
           content:
             application/json:
@@ -528,7 +727,7 @@ paths:
                   message:
                     type: string
                     description: Error message indicating user must login first.
-        '404':
+        "404":
           description: Article not found.
           content:
             application/json:
@@ -542,6 +741,8 @@ paths:
                     type: string
                     description: Indication the article not found.
     put:
+      tags:
+        - Articles
       summary: Update the exsiting article.
       security:
         - bearerAuth: []
@@ -568,7 +769,7 @@ paths:
                   format: binary
                   description: The image of article.
       responses:
-        '200':
+        "200":
           description: Article successfully Updated
           content:
             application/json:
@@ -581,7 +782,7 @@ paths:
                   message:
                     type: string
                     description: Message indicating the article successfully Updated.
-        '403':
+        "403":
           description: "Token must be included in bearer at req.headers"
           content:
             application/json:
@@ -594,7 +795,7 @@ paths:
                   message:
                     type: string
                     description: Error message indicating user must login first.
-        '404':
+        "404":
           description: Article not found.
           content:
             application/json:
@@ -607,14 +808,13 @@ paths:
                   message:
                     type: string
                     description: Indication the article not found.
-
   /meals:
     get:
+      tags:
+        - Meals
       summary: All Meals
-      security:
-        - bearerAuth: []
       responses:
-        '200':
+        "200":
           description: Successfully Get All Title,Post Date, Image, Glycemic Index, Glycemic Load, and Calorie Meals
           content:
             application/json:
@@ -662,7 +862,7 @@ paths:
                         imageUrl:
                           type: string
                           example: https://storage.googleapis.com/example-project/example.png
-        '403':
+        "403":
           description: "Token must be included in bearer at req.headers"
           content:
             application/json:
@@ -676,6 +876,8 @@ paths:
                     type: string
                     description: Error message indicating user must login first.
     post:
+      tags:
+        - Meals
       summary: Create a New Meal
       security:
         - bearerAuth: []
@@ -724,7 +926,7 @@ paths:
                 - carbs
                 - fats
       responses:
-        '201':
+        "201":
           description: Meals successfully created
           content:
             application/json:
@@ -737,7 +939,7 @@ paths:
                   message:
                     type: string
                     description: Message indicating the meal successfully created.
-        '400':
+        "400":
           description: The field required empty.
           content:
             application/json:
@@ -750,7 +952,7 @@ paths:
                   message:
                     type: string
                     description: Field required empty.
-        '403':
+        "403":
           description: "Token must be included in bearer at req.headers"
           content:
             application/json:
@@ -763,12 +965,11 @@ paths:
                   message:
                     type: string
                     description: Error message indicating user must login first.
-  
   /meals/{id}:
     get:
+      tags:
+        - Meals
       summary: Get spesific meal
-      security:
-        - bearerAuth: []
       parameters:
         - name: id
           in: path
@@ -776,7 +977,7 @@ paths:
           schema:
             type: string
       responses:
-        '200':
+        "200":
           description: Successfully get the meal
           content:
             application/json:
@@ -811,8 +1012,8 @@ paths:
                         type: number
                         example: 11
                       protein:
-                          type: number
-                          example: 11
+                        type: number
+                        example: 11
                       carbs:
                         type: number
                         example: 11
@@ -825,7 +1026,7 @@ paths:
                       content:
                         type: string
                         example: Content
-        '403':
+        "403":
           description: "Token must be included in bearer at req.headers"
           content:
             application/json:
@@ -838,7 +1039,7 @@ paths:
                   message:
                     type: string
                     description: Error message indicating user must login first.
-        '404':
+        "404":
           description: Meal not found.
           content:
             application/json:
@@ -852,6 +1053,8 @@ paths:
                     type: string
                     description: Indication the meal not found.
     put:
+      tags:
+        - Meals
       summary: Update the exsiting meal.
       security:
         - bearerAuth: []
@@ -896,7 +1099,7 @@ paths:
                   type: string
                   description: The Fats of meal.
       responses:
-        '200':
+        "200":
           description: Meal successfully Updated
           content:
             application/json:
@@ -909,7 +1112,7 @@ paths:
                   message:
                     type: string
                     description: Message indicating the meal successfully Updated.
-        '403':
+        "403":
           description: "Token must be included in bearer at req.headers"
           content:
             application/json:
@@ -922,7 +1125,7 @@ paths:
                   message:
                     type: string
                     description: Error message indicating user must login first.
-        '404':
+        "404":
           description: Meal not found.
           content:
             application/json:
@@ -935,7 +1138,117 @@ paths:
                   message:
                     type: string
                     description: Indication the meal not found.
-
+  /meals/detect-food:
+    post:
+      tags: 
+        - Meals
+      summary: Detect Foods with ML Models.
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                image:
+                  type: string
+                  format: binary
+                  description: Foods image that wants to detect.
+              required:
+                - image
+      responses:
+        "200":
+          description: Nutrition Fatcs and Recommendation
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  status:
+                    type: "string"
+                  result:
+                    type: "array"
+                    items:
+                      type: "object"
+                      properties:
+                        name:
+                          type: "string"
+                        type: 
+                          type: "string"
+                        nutrition_fact:
+                          type: "object"
+                          properties:
+                            GL: 
+                              type: "number"
+                            GL_Level:
+                              type: "string"  
+                            GI:
+                              type: "number"
+                            GI_Level: 
+                              type: "string"
+                            Proteins:
+                              type: "number"
+                            Carbohydrates:
+                              type: "number"
+                            Fats:
+                              type: "number"  
+                            Calories:
+                              type: "number"
+                        tags:
+                          type: "array"
+                          items:
+                            type: "string"
+                        serving:
+                          type: "string"
+                        recommendation:
+                          type: "array"
+                          items:
+                            type: "object"
+                            properties:
+                              name:
+                                type: "string"
+                              type:
+                                type: "string"
+                              nutrition_fact:
+                                type: "object"
+                                properties:
+                                  GL: 
+                                    type: "number"
+                                  GL_Level:
+                                    type: "string"  
+                                  GI:
+                                    type: "number"
+                                  GI_Level: 
+                                    type: "string"
+                                  Proteins:
+                                    type: "number"
+                                  Carbohydrates:
+                                    type: "number"
+                                  Fats:
+                                    type: "number"  
+                                  Calories:
+                                    type: "number"
+                              tags:
+                                type: "array"
+                                items:
+                                  type: "string"
+                              serving:
+                                type: "string"
+                              imageUrl:
+                                type: "string"
+        "404":
+          description: Bad request, detected foods not found in db.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    description: Status of the operation.
+                  message:
+                    type: string
+                    description: Error message.
+  
 
 components:
   securitySchemes:
@@ -943,6 +1256,3 @@ components:
       type: http
       scheme: bearer
       bearerFormat: JWT
-                        
-          
-
