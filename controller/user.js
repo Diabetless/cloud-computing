@@ -177,14 +177,19 @@ const editUserPassword = async (req, res, next)=>{
     const decoded = jwt.verify(token, jwtKey);
     const loggedUserRef = usersref.doc(decoded.userId);
     const loggedUserData = (await loggedUserRef.get()).data();
-    const { password } = req.body;
-    if(!password){
+    const { oldPassword, newPassword } = req.body;
+    if(!newPassword || !oldPassword){
       const error = new Error("Password can't be empty!");
       error.status = 400;
       throw error;
     }
-    
-    const hashedPassword = await bcrypt.hash(password, 10);
+    const isPasswordMatch = await bcrypt.compare(oldPassword, loggedUserData.password);
+    if(!isPasswordMatch){
+      const error = new Error("Wrong password");
+      error.status = 400;
+      throw error;
+    }
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
     await loggedUserRef.update({
       password: hashedPassword
     })

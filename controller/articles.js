@@ -28,6 +28,12 @@ const postArticleHandler = async (req, res, next) => {
       error.status = 400;
       throw error;
     }
+    const userData = loggedUserRef.data();
+    if(userData.role !== "admin"){
+      const error = new Error("You don't have permission!");
+      error.status = 401;
+      throw error;
+    }
 
     const articlesRef = db.collection('articles');
     const uniqueId = uuidv4();
@@ -88,7 +94,12 @@ const putArticleHandler = async (req, res, nex) => {
       error.status = 400;
       throw error;
     }
-
+    const userData = loggedUserRef.data();
+    if(userData.role !== "admin"){
+      const error = new Error("You don't have permission!");
+      error.status = 401;
+      throw error;
+    }
     const id = req.params.id;
     const articleRef = db.collection('articles').doc(`${id}`);
     const doc = await articleRef.get();

@@ -18,8 +18,6 @@ const getToken = (headers) => {
   }
 }
 
-
-
 const postFoodsData =  async (req, res, next) => {
   try{
     const token = getToken(req.headers);
@@ -30,7 +28,12 @@ const postFoodsData =  async (req, res, next) => {
       error.status = 400;
       throw error;
     }
-
+    const userData = loggedUserRef.data();
+    if(userData.role !== "admin"){
+      const error = new Error("You don't have permission!");
+      error.status = 401;
+      throw error;
+    }
     const foodsRef = db.collection('foods');
     let { 
       GL, GL_Level, GI, GI_Level, Calories, Carbohydrates, 
