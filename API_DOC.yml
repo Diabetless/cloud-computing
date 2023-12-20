@@ -229,7 +229,7 @@ paths:
                     description: status of the operation.
                   message:
                     type: string
-                    description: Message indicating the article successfully created.
+                    description: Message indicating the user data successfully created.
         "400":
           description: Bad request, email has been registered
           content:
@@ -256,9 +256,12 @@ paths:
             schema:
               type: object
               properties:
-                password:
+                oldPassword:
                   type: string
-                  description: user password
+                  description: user current password
+                newPassword:
+                  type: string
+                  description: user new password
       responses:
         "200":
           description: Successfully Updated User Password
@@ -272,7 +275,7 @@ paths:
                     description: status of the operation.
                   message:
                     type: string
-                    description: Message indicating the article successfully created.
+                    description: Message indicating the password successfully updated.
         "400":
           description: Bad request, password can't be empty.
           content:
