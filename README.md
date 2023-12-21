@@ -56,3 +56,11 @@ We have created the API Documentation for this service based on OPEN API specifi
 ![image](https://github.com/Diabetless/cloud-computing/assets/101824833/090ca066-c139-4259-ad83-8ae338c7cbc4)
 
 <h3>Instructions</h3>
+<h4>Users</h4>
+This service will be responsible for user data that will be used in the mobile app. A <strong>jwt token</strong> is required to use the service <strong>except</strong> for register and login. <br>
+<h4>Articles</h4>
+This service will be responsible for articles displayed on the mobile app. <strong>No jwt token is required when doing GET</strong> but to <strong>post articles and put articles requires, jwt token and admin role</strong>. <br>
+<h4>Meals</h4>
+This service will be responsible for meals displayed on the mobile app. <strong>No jwt token is required when doing GET</strong> but for <strong>post meals and put meals, a jwt token and admin role are required</strong>. <br>
+<h4>Health</h4>
+This service will be responsible for managing user health data. Each service <strong>requires a jwt token</strong> so that it can be used by users.
