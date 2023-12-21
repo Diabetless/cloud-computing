@@ -8,13 +8,17 @@ Diabetless web service is a collection of web services that have features like u
 JWT(JSON Web Token). You need to login to access the service. The login is using email and password. If you don't have an account you can register to gain access to these services.
 
 One of the cool features of this web service is predicting food by uploading food image. Once uploaded, user can see the food name and its nutrition fact such as glycemic index, glycemic load, protein,
-carbohydrates, and more. 
+carbohydrates, and more.
+
+<h3>Architecture</h3>
+
+![architecture](https://github.com/Diabetless/cloud-computing/assets/101824833/4d702cac-ffb2-4fdf-8c87-adb73e06e804)
 
 This web services has two service available which is:
 - backend
   <br/> base URL: https://backend-sggimrersq-et.a.run.app/
   <br/>If you want to see all of the features of the backend service you can visit the <a href="https://backend-sggimrersq-et.a.run.app/api-docs/">API DOCUMENTATION LINK</a>.
-- deployed-ml
+- deployed-model
   <br/> base URL: https://deployed-model-sggimrersq-et.a.run.app
   <br/>If you want to see all of the features of the deployed-ml service you can visit the <a href="https://deployed-model-sggimrersq-et.a.run.app/api-docs">API DOCUMENTATION LINK</a>.
 
@@ -48,6 +52,7 @@ Endpoints available:
   <pre>DELETE /users/blood-sugar/{id} (Delete the blood sugar data users by id)</pre>
 
 We have created the API Documentation for this service based on OPEN API specification. If you want to visit/see full API Documentation of this service you can visit this link: https://backend-sggimrersq-et.a.run.app/api-docs/
+<br/>
 ![image](https://github.com/Diabetless/cloud-computing/assets/101824833/090ca066-c139-4259-ad83-8ae338c7cbc4)
 
 <h3>Instructions</h3>
